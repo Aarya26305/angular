@@ -1,0 +1,308 @@
+ng new user-auth-app
+
+cd user-auth-app
+
+ng generate component register
+ng generate component login
+ng generate component profile
+
+app.routes.ts
+
+import { Routes } from '@angular/router';
+
+import { RegisterComponent } from './register/register';
+import { LoginComponent } from './login/login';
+import { ProfileComponent } from './profile/profile';
+
+export const routes: Routes = [
+
+  { path:'', component:RegisterComponent },
+
+  { path:'login', component:LoginComponent },
+
+  { path:'profile', component:ProfileComponent }
+
+];
+
+app.html
+
+<h1>User Authentication App</h1>
+
+<nav>
+  <a routerLink="/">Register</a> |
+  <a routerLink="/login">Login</a> |
+  <a routerLink="/profile">Profile</a>
+</nav>
+
+<hr>
+
+<router-outlet></router-outlet>
+
+app.ts
+
+import { Component } from '@angular/core';
+import { RouterOutlet, RouterLink } from '@angular/router';
+
+@Component({
+  selector: 'app-root',
+  imports: [RouterOutlet, RouterLink],
+  templateUrl: './app.html',
+  styleUrl: './app.css'
+})
+
+export class App {
+
+}
+
+register.ts
+
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-register',
+  imports:[FormsModule],
+  templateUrl: './register.html',
+  styleUrl: './register.css'
+})
+
+export class RegisterComponent {
+
+  user = {
+    name:'',
+    email:'',
+    password:''
+  };
+
+  register(){
+
+    localStorage.setItem(
+      'user',
+      JSON.stringify(this.user)
+    );
+
+    alert("Registration Successful");
+  }
+
+}
+
+register.html
+
+<h2>Register User</h2>
+
+<input type="text"
+placeholder="Name"
+[(ngModel)]="user.name">
+
+<br><br>
+
+<input type="email"
+placeholder="Email"
+[(ngModel)]="user.email">
+
+<br><br>
+
+<input type="password"
+placeholder="Password"
+[(ngModel)]="user.password">
+
+<br><br>
+
+<button (click)="register()">
+Register
+</button>
+
+login.ts
+
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-login',
+  imports:[FormsModule],
+  templateUrl: './login.html',
+  styleUrl: './login.css'
+})
+
+export class LoginComponent {
+
+  email='';
+  password='';
+
+  login(){
+
+    const data:any =
+    JSON.parse(localStorage.getItem('user') || '{}');
+
+    if(
+      this.email == data.email &&
+      this.password == data.password
+    ){
+      alert("Login Successful");
+    }
+    else{
+      alert("Invalid Credentials");
+    }
+
+  }
+
+}
+
+login.html
+
+<h2>Login User</h2>
+
+<input type="email"
+placeholder="Email"
+[(ngModel)]="email">
+
+<br><br>
+
+<input type="password"
+placeholder="Password"
+[(ngModel)]="password">
+
+<br><br>
+
+<button (click)="login()">
+Login
+</button>
+
+profile.ts
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-profile',
+  templateUrl: './profile.html',
+  styleUrl: './profile.css'
+})
+
+export class ProfileComponent {
+
+  user:any =
+  JSON.parse(localStorage.getItem('user') || '{}');
+
+}
+
+profile.html
+
+<h2>User Profile</h2>
+
+<p>
+<b>Name:</b> {{user.name}}
+</p>
+
+<p>
+<b>Email:</b> {{user.email}}
+</p>
+
+styles.css
+
+html, body{
+    height:100%;
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#4facfe,#00f2fe);
+}
+
+app.css
+
+.main-container{
+    width:450px;
+    background:white;
+    padding:40px;
+    border-radius:18px;
+    box-shadow:0 0 25px rgba(0,0,0,0.25);
+    text-align:center;
+}
+
+h1{
+    color:#0d47a1;
+    margin-bottom:25px;
+    font-size:40px;
+}
+
+h2{
+    color:#1565c0;
+    margin-bottom:25px;
+    font-size:34px;
+}
+
+nav{
+    margin-bottom:20px;
+}
+
+nav a{
+    text-decoration:none;
+    color:white;
+    background:#1976d2;
+    padding:10px 18px;
+    border-radius:8px;
+    margin:0 6px;
+    font-weight:bold;
+    transition:0.3s;
+    font-size:18px;
+}
+
+nav a:hover{
+    background:#0d47a1;
+}
+
+input{
+    width:90%;
+    padding:14px;
+    border:2px solid #90caf9;
+    border-radius:8px;
+    font-size:18px;
+    margin-bottom:18px;
+}
+
+button{
+    width:96%;
+    padding:14px;
+    background:linear-gradient(to right,#43cea2,#185a9d);
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+
+p{
+    font-size:20px;
+    color:#333;
+    background:#e3f2fd;
+    padding:12px;
+    border-radius:8px;
+}
+
+app.html
+
+<div class="main-container">
+
+<h1>User Authentication App</h1>
+
+<nav>
+  <a routerLink="/">Register</a>
+  <a routerLink="/login">Login</a>
+  <a routerLink="/profile">Profile</a>
+</nav>
+
+<hr><br>
+
+<router-outlet></router-outlet>
+
+</div>
